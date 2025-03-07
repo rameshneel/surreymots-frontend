@@ -22,7 +22,11 @@ import LogoutModal from "./LogoutModal";
 
 const sidebarItems = [
   { name: "Booking", icon: Calendar, path: "/admin" },
-  { name: "Customer Booking", icon: Bookmark, path: "/admin/booking/customer" },
+  {
+    name: "Customer Bookings",
+    icon: Bookmark,
+    path: "/admin/booking/customer",
+  },
   {
     name: "Customer Calendar",
     icon: Calendar,
