@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "../context/AuthContext";
 import Loading from "./Loading";
 import ProtectedRoute from "./PrivateRoute";
+import ServiceBookingForm from "../pages/ServiceBookingForm";
 
 const LoginPage = lazy(() => import("../components/Admin/LoginPage"));
 const ForgotPassword = lazy(() => import("../components/Admin/ForgotPassword"));
@@ -38,6 +39,7 @@ const AppRoutes = () => {
         >
           <Routes>
             {/* Public Routes */}
+            <Route path="/" element={<ServiceBookingForm />} />
             <Route
               path="login"
               element={
