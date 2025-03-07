@@ -95,7 +95,7 @@ const Booking = () => {
     () => [
       { Header: "Name", accessor: "customerName", sortType: "alphanumeric" },
       {
-        Header: "Booked Date",
+        Header: "Booked For",
         accessor: "selectedDate",
         sortType: "basic",
         Cell: ({ value }) => format(new Date(value), "dd/MM/yyyy"),
@@ -108,11 +108,28 @@ const Booking = () => {
         Cell: ({ value }) => `£${value}`,
       },
       {
-        Header: "Payment Status",
-        accessor: "paymentStatus",
+        Header: "Class",
+        accessor: "classSelection",
         sortType: "basic",
-        Cell: ({ value }) => (value ? value.toUpperCase() : "N/A"),
+        Cell: ({ value }) => {
+          if (!value) {
+            return "N/A";
+          }
+
+          // Match the pattern of text followed by a number (e.g., "class4" or "class7")
+          const match = value.trim().match(/^([a-zA-Z]+)(\d+)$/);
+
+          if (match) {
+            // Capitalize the first letter of the text part and append the number
+            return `${match[1].charAt(0).toUpperCase() + match[1].slice(1)} ${
+              match[2]
+            }`;
+          }
+
+          return value; // In case the format is different, return the value as is
+        },
       },
+
       {
         Header: "Booked Method",
         accessor: "bookedBy",
@@ -124,7 +141,7 @@ const Booking = () => {
         },
       },
       {
-        Header: "Created At",
+        Header: "Booked On",
         accessor: "createdAt",
         sortType: "basic",
         Cell: ({ value }) => format(new Date(value), "dd/MM/yyyy"),

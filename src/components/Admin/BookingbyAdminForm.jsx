@@ -13,7 +13,7 @@ import {
   CreditCard,
   Loader2,
   AlertCircle,
-  EuroIcon,
+  PoundSterlingIcon,
 } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -460,7 +460,7 @@ const BookingbyAdminForm = () => {
                       Price:
                     </label>
                     <div className="flex items-center space-x-2 px-3 py-2 sm:px-4 sm:py-3 rounded-lg border border-gray-600 bg-gray-800">
-                      <EuroIcon className="text-[#01669A] h-5 w-5 sm:h-6 sm:w-6" />
+                      <PoundSterlingIcon className="text-[#01669A] h-5 w-5 sm:h-6 sm:w-6" />
                       <span className="text-lg sm:text-xl font-semibold text-teal-400">
                         {formData.totalPrice
                           ? Number(formData.totalPrice).toLocaleString(
