@@ -21,7 +21,7 @@ import logo from "../../assets/logo-dark.png";
 import LogoutModal from "./LogoutModal";
 
 const sidebarItems = [
-  { name: "Booking", icon: Calendar, path: "/admin" },
+  { name: "Bookings", icon: Calendar, path: "/admin" },
   {
     name: "Customer Bookings",
     icon: Bookmark,
