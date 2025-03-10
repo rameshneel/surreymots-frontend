@@ -33,7 +33,13 @@ const BookingConfirmation = ({ isOpen, closeModal, formData, reset }) => {
           response.data.data.customer?.totalPrice ||
           formData.totalPrice ||
           "N/A";
-        setConfirmationData({ ...formData, invoiceNumber, amount });
+        const customerEmail = response.data.data.customer?.email;
+        setConfirmationData({
+          ...formData,
+          invoiceNumber,
+          amount,
+          customerEmail,
+        });
         setOrderStatus("completed");
         toast.success("Booking successful!", { position: "top-right" });
         setTimeout(() => {
@@ -145,6 +151,11 @@ const BookingConfirmation = ({ isOpen, closeModal, formData, reset }) => {
                       {confirmationData?.selectedTimeSlot}
                     </p>
                   </div>
+                  <p className="text-gray-600 text-sm">
+                    A confirmation has been sent to{" "}
+                    {confirmationData?.customerEmail}. Please check your inbox
+                    for more details.
+                  </p>
                   <button
                     onClick={handleCancel}
                     className="mt-4 inline-flex items-center px-4 py-2 bg-[#01669A] text-white rounded-lg hover:bg-[#024C6F] transition-colors"
