@@ -1,139 +1,156 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { X, CheckCircle2, Loader2 } from "lucide-react";
+import { X, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 import { createCustomer } from "../services/api";
 
-const BookingConfirmation = ({ isOpen, closeModal, formData }) => {
+const BookingConfirmation = ({ isOpen, closeModal, formData, reset }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [orderStatus, setOrderStatus] = useState("pending");
   const [confirmationData, setConfirmationData] = useState(null);
 
   const modalVariants = {
-    hidden: { opacity: 0, y: -50 },
+    hidden: { opacity: 0, scale: 0.95 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      },
+      scale: 1,
+      transition: { type: "spring", stiffness: 300, damping: 25 },
     },
-    exit: {
-      opacity: 0,
-      y: 50,
-      transition: { duration: 0.3 },
-    },
+    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } },
   };
 
-  useEffect(() => {
-    const initializeOrder = async () => {
-      if (isOpen && orderStatus === "pending") {
-        setIsLoading(true);
-        try {
-          const response = await createCustomer(formData);
-          if (response.data.success) {
-            setConfirmationData({
-              ...formData,
-              invoiceNumber:
-                response.data.data.paypalOrderId || "ORD-" + Date.now(), // Using timestamp as fallback invoice
-              amount: formData.totalPrice || "N/A", // Assuming amount might be in formData
-            });
-            setOrderStatus("completed");
-            toast.success("Booking created successfully!", {
-              position: "top-right",
-            });
-            setTimeout(() => {
-              closeModal();
-              setOrderStatus("pending");
-            }, 5000); // Close after 5 seconds
-          } else {
-            throw new Error(response.message);
-          }
-        } catch (error) {
-          toast.error(
-            error.response?.data?.message || "Failed to create booking",
-            {
-              position: "top-right",
-            }
-          );
-          setOrderStatus("error");
-        } finally {
-          setIsLoading(false);
-        }
+  const initializeOrder = useCallback(async () => {
+    if (!isOpen || orderStatus !== "pending") return;
+
+    setIsLoading(true);
+    try {
+      const response = await createCustomer(formData);
+      if (response.data.success) {
+        const invoiceNumber =
+          response.data.data.customer?.paypalOrderId || `ORD-${Date.now()}`;
+        const amount =
+          response.data.data.customer?.totalPrice ||
+          formData.totalPrice ||
+          "N/A";
+        setConfirmationData({ ...formData, invoiceNumber, amount });
+        setOrderStatus("completed");
+        toast.success("Booking successful!", { position: "top-right" });
+        setTimeout(() => {
+          closeModal();
+          setOrderStatus("pending");
+          setConfirmationData(null);
+        }, 50000); // Auto-close after 5 seconds
+      } else {
+        throw new Error(response.data.message || "Booking failed");
       }
-    };
+    } catch (error) {
+      setOrderStatus("error");
+      toast.error(error.response?.data?.message || "Failed to create booking", {
+        position: "top-right",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isOpen, formData, orderStatus, closeModal]);
+
+  useEffect(() => {
     initializeOrder();
-  }, [isOpen, formData, orderStatus]);
+  }, [initializeOrder]);
 
   const handleCancel = () => {
     setOrderStatus("pending");
+    setConfirmationData(null);
     closeModal();
+    reset();
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm">
-          <div className="flex min-h-screen items-center justify-center p-4">
-            <motion.div
-              variants={modalVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
-            >
-              {/* Close Button (hidden when completed) */}
-              {orderStatus !== "completed" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <motion.div
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="relative w-full max-w-lg rounded-2xl bg-white shadow-xl overflow-hidden"
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[#01669A] to-[#024C6F] p-4 flex items-center justify-between">
+              <h3 className="text-xl font-semibold text-white">
+                Booking Confirmation
+              </h3>
+              {orderStatus == "completed" && (
                 <button
                   onClick={handleCancel}
                   disabled={isLoading}
-                  className="absolute right-4 top-4 rounded-full p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+                  className="p-1 text-white hover:bg-white/20 rounded-full transition-colors"
+                  aria-label="Close modal"
                 >
                   <X className="h-5 w-5" />
                 </button>
               )}
+            </div>
 
-              {/* Header */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Booking Confirmation
-              </h3>
-
-              {/* Success State */}
-              {orderStatus === "completed" && (
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
-                >
-                  <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    className="space-y-6 text-center"
-                  >
-                    <CheckCircle2 className="mx-auto h-16 w-16 text-green-500" />
-                    <h2 className="text-2xl font-bold">Booking Confirmed!</h2>
-                    <p>
-                      Thank you for your booking. Your invoice number is:{" "}
-                      {confirmationData?.invoiceNumber}
-                    </p>
-                    <p>Total Amount: £{confirmationData?.amount}</p>
-                  </motion.div>
-                </motion.div>
-              )}
-
+            {/* Content */}
+            <div className="p-6">
               {/* Loading State */}
               {isLoading && (
                 <motion.div
-                  className="flex justify-center py-6"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
+                  className="flex flex-col items-center justify-center py-8"
                 >
-                  <Loader2 className="h-8 w-8 text-indigo-600 animate-spin" />
+                  <Loader2 className="h-10 w-10 text-[#01669A] animate-spin" />
+                  <p className="mt-4 text-gray-600 text-sm">
+                    Processing your booking...
+                  </p>
+                </motion.div>
+              )}
+
+              {/* Success State */}
+              {orderStatus === "completed" && !isLoading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center space-y-4"
+                >
+                  <CheckCircle2 className="mx-auto h-12 w-12 text-green-500" />
+                  <h2 className="text-2xl font-bold text-gray-800">
+                    Booking Confirmed!
+                  </h2>
+                  <p className="text-gray-600 text-sm">
+                    Thank you for your booking. Here are your details:
+                  </p>
+                  <div className="bg-gray-50 p-4 rounded-lg text-left space-y-2">
+                    <p>
+                      <span className="font-medium text-gray-700">
+                        Invoice Number:
+                      </span>{" "}
+                      {confirmationData?.invoiceNumber}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700">
+                        Total Amount:
+                      </span>{" "}
+                      £{Number(confirmationData?.amount).toFixed(2)}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700">Date:</span>{" "}
+                      {confirmationData?.selectedDate}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700">Time:</span>{" "}
+                      {confirmationData?.selectedTimeSlot}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleCancel}
+                    className="mt-4 inline-flex items-center px-4 py-2 bg-[#01669A] text-white rounded-lg hover:bg-[#024C6F] transition-colors"
+                  >
+                    Close
+                  </button>
                 </motion.div>
               )}
 
@@ -142,43 +159,44 @@ const BookingConfirmation = ({ isOpen, closeModal, formData }) => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-6"
+                  className="text-center space-y-4"
                 >
-                  <p className="text-red-600">
-                    There was an error creating your booking. Please try again.
+                  <AlertCircle className="mx-auto h-12 w-12 text-red-500" />
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Booking Failed
+                  </h2>
+                  <p className="text-gray-600 text-sm">
+                    There was an issue creating your booking. Please try again
+                    or contact support.
                   </p>
+                  <button
+                    onClick={handleCancel}
+                    className="mt-4 inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                  >
+                    Close
+                  </button>
                 </motion.div>
               )}
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       )}
+      <ToastContainer position="top-right" autoClose={5000} theme="colored" />
     </AnimatePresence>
   );
 };
 
 export default BookingConfirmation;
 
-// import React, { useCallback, useEffect, useState } from "react";
-
+// import React, { useEffect, useState } from "react";
 // import { motion, AnimatePresence } from "framer-motion";
 // import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
-// import { X, Clock, CheckCircle2, Loader2 } from "lucide-react";
-// import { capturePayment, cancelPayment, createCustomer } from "../services/api";
-
-// const formatTime = (ms) => {
-//   const minutes = Math.floor(ms / 60000);
-//   const seconds = ((ms % 60000) / 1000).toFixed(0);
-//   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-// };
+// import { X, CheckCircle2, Loader2 } from "lucide-react";
+// import { createCustomer } from "../services/api";
 
 // const BookingConfirmation = ({ isOpen, closeModal, formData }) => {
-//   const PAYMENT_TIMEOUT = 10 * 60 * 1000;
-
-//   const [timeLeft, setTimeLeft] = useState(PAYMENT_TIMEOUT);
 //   const [isLoading, setIsLoading] = useState(false);
-//   const [paypalOrderId, setPaypalOrderId] = useState(null);
 //   const [orderStatus, setOrderStatus] = useState("pending");
 //   const [confirmationData, setConfirmationData] = useState(null);
 
@@ -201,36 +219,35 @@ export default BookingConfirmation;
 //   };
 
 //   useEffect(() => {
-//     let timer;
-//     if (isOpen && timeLeft > 0 && orderStatus !== "completed") {
-//       timer = setInterval(() => {
-//         setTimeLeft((prev) => {
-//           if (prev <= 1000) {
-//             handleCancel();
-//             return 0;
-//           }
-//           return prev - 1000;
-//         });
-//       }, 1000);
-//     }
-//     return () => clearInterval(timer);
-//   }, [isOpen, timeLeft, orderStatus]);
-
-//   useEffect(() => {
 //     const initializeOrder = async () => {
-//       if (isOpen && !paypalOrderId) {
+//       if (isOpen && orderStatus === "pending") {
 //         setIsLoading(true);
 //         try {
 //           const response = await createCustomer(formData);
+//           console.log("responce", response);
+//           console.log("responce.data.success", response.data.success);
 //           if (response.data.success) {
-//             setPaypalOrderId(response.data.data.paypalOrderId);
-//             setOrderStatus("created");
+//             setConfirmationData({
+//               ...formData,
+//               invoiceNumber:
+//                 response.data.data.customer.paypalOrderId ||
+//                 "ORD-" + Date.now(),
+//               amount: response.data.data.customer.totalPrice || "N/A",
+//             });
+//             setOrderStatus("completed");
+//             // toast.success("Booking successful!", {
+//             //   position: "top-right",
+//             // });
+//             setTimeout(() => {
+//               closeModal();
+//               setOrderStatus("pending");
+//             }, 50000);
 //           } else {
 //             throw new Error(response.message);
 //           }
 //         } catch (error) {
 //           toast.error(
-//             error.response?.data?.message || "Failed to create order",
+//             error.response?.data?.message || "Failed to create booking",
 //             {
 //               position: "top-right",
 //             }
@@ -242,54 +259,11 @@ export default BookingConfirmation;
 //       }
 //     };
 //     initializeOrder();
-//   }, [isOpen, formData]);
+//   }, [isOpen, formData, orderStatus]);
 
-//   const handleCancel = async () => {
-//     setIsLoading(true);
-//     try {
-//       if (paypalOrderId) {
-//         await cancelPayment(paypalOrderId);
-//       }
-//       toast.info("Payment cancelled", {
-//         position: "top-right",
-//       });
-//       setOrderStatus("pending");
-//       setPaypalOrderId(null);
-//       closeModal();
-//     } catch (error) {
-//       toast.error("Failed to cancel payment", {
-//         position: "top-right",
-//       });
-//       setOrderStatus("error");
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   const handlePaymentSuccess = async (details) => {
-//     setIsLoading(true);
-//     setOrderStatus("processing");
-//     try {
-//       await capturePayment(details);
-//       setConfirmationData({
-//         ...formData,
-//         invoiceNumber: details.id,
-//         amount: details.purchase_units[0].amount.value,
-//       });
-//       setOrderStatus("completed");
-//       setTimeout(() => {
-//         closeModal();
-//         setOrderStatus("pending");
-//         setPaypalOrderId(null);
-//       }, 10000);
-//     } catch (error) {
-//       toast.error("Payment capture failed", {
-//         position: "top-right",
-//       });
-//       setOrderStatus("error");
-//     } finally {
-//       setIsLoading(false);
-//     }
+//   const handleCancel = () => {
+//     setOrderStatus("pending");
+//     closeModal();
 //   };
 
 //   return (
@@ -304,9 +278,8 @@ export default BookingConfirmation;
 //               exit="exit"
 //               className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
 //             >
-//               {/* Close Button */}
 //               {/* Close Button (hidden when completed) */}
-//               {orderStatus !== "completed" && (
+//               {orderStatus == "completed" && (
 //                 <button
 //                   onClick={handleCancel}
 //                   disabled={isLoading}
@@ -315,49 +288,20 @@ export default BookingConfirmation;
 //                   <X className="h-5 w-5" />
 //                 </button>
 //               )}
+
 //               {/* Header */}
 //               <h3 className="text-2xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-//                 Complete Your Payment
+//                 Booking Confirmation
 //               </h3>
 
-//               {/* Timer */}
-//               {orderStatus === "created" && (
-//                 <motion.div
-//                   className="mb-6"
-//                   initial={{ opacity: 0 }}
-//                   animate={{ opacity: 1 }}
-//                 >
-//                   <div className="flex items-center justify-center gap-2 mb-3">
-//                     <Clock className="h-5 w-5 text-indigo-600 animate-pulse" />
-//                     <span className="text-sm font-medium text-gray-700">
-//                       Time remaining: {formatTime(timeLeft)}
-//                     </span>
-//                   </div>
-//                   <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-//                     <motion.div
-//                       className="absolute h-full bg-gradient-to-r from-indigo-500 to-blue-500"
-//                       initial={{ width: "100%" }}
-//                       animate={{
-//                         width: `${(timeLeft / PAYMENT_TIMEOUT) * 100}%`,
-//                       }}
-//                       transition={{ ease: "linear" }}
-//                     />
-//                   </div>
-//                 </motion.div>
-//               )}
-
-//               {/* Payment Status */}
-//               {orderStatus === "completed" ? (
+//               {/* Success State */}
+//               {orderStatus === "completed" && (
 //                 <motion.div
 //                   initial={{ scale: 0.9, opacity: 0 }}
 //                   animate={{ scale: 1, opacity: 1 }}
 //                   transition={{ duration: 0.5 }}
 //                   className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
 //                 >
-//                   <h1 className="text-2xl font-bold text-center mb-6">
-//                     Payment Confirmation
-//                   </h1>
-
 //                   <motion.div
 //                     initial={{ opacity: 0, x: 50 }}
 //                     animate={{ opacity: 1, x: 0 }}
@@ -370,58 +314,33 @@ export default BookingConfirmation;
 //                       Thank you for your booking. Your invoice number is:{" "}
 //                       {confirmationData?.invoiceNumber}
 //                     </p>
-//                     <p>Total Amount Paid: £{confirmationData?.amount}</p>
-//                     <button
-//                       onClick={() => navigate("/")}
-//                       className="mt-4 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
-//                     >
-//                       Return to Home
-//                     </button>
+//                     <p>Total Amount: £{confirmationData?.amount}</p>
 //                   </motion.div>
 //                 </motion.div>
-//               ) : (
-//                 <>
-//                   {/* Loading State */}
-//                   {isLoading && (
-//                     <motion.div
-//                       className="flex justify-center py-6"
-//                       initial={{ opacity: 0 }}
-//                       animate={{ opacity: 1 }}
-//                     >
-//                       <Loader2 className="h-8 w-8 text-indigo-600 animate-spin" />
-//                     </motion.div>
-//                   )}
+//               )}
 
-//                   {/* PayPal Buttons */}
-//                   {orderStatus === "created" && !isLoading && (
-//                     <motion.div
-//                       initial={{ opacity: 0, y: 20 }}
-//                       animate={{ opacity: 1, y: 0 }}
-//                       className="mt-6"
-//                     >
-//                       <PayPalScriptProvider
-//                         options={{ "client-id": PAYPAL_CLIENT_ID }}
-//                       >
-//                         <PayPalButtons
-//                           style={{
-//                             layout: "vertical",
-//                             color: "blue",
-//                             shape: "pill",
-//                             label: "pay",
-//                             height: 48,
-//                           }}
-//                           createOrder={() => paypalOrderId}
-//                           onApprove={async (data, actions) => {
-//                             const details = await actions.order.capture();
-//                             await handlePaymentSuccess(details);
-//                           }}
-//                           onCancel={handleCancel}
-//                           disabled={isLoading}
-//                         />
-//                       </PayPalScriptProvider>
-//                     </motion.div>
-//                   )}
-//                 </>
+//               {/* Loading State */}
+//               {isLoading && (
+//                 <motion.div
+//                   className="flex justify-center py-6"
+//                   initial={{ opacity: 0 }}
+//                   animate={{ opacity: 1 }}
+//                 >
+//                   <Loader2 className="h-8 w-8 text-indigo-600 animate-spin" />
+//                 </motion.div>
+//               )}
+
+//               {/* Error State */}
+//               {orderStatus === "error" && !isLoading && (
+//                 <motion.div
+//                   initial={{ opacity: 0, y: 20 }}
+//                   animate={{ opacity: 1, y: 0 }}
+//                   className="text-center py-6"
+//                 >
+//                   <p className="text-red-600">
+//                     There was an error creating your booking. Please try again.
+//                   </p>
+//                 </motion.div>
 //               )}
 //             </motion.div>
 //           </div>
