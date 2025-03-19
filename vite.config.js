@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 // https://vitejs.dev/config/
 // export default defineConfig({
 //   plugins: [react()],
-//   base: "/booking/",
+//   base: "/booking/",// Change this from "/booking/" to "./"
 //   // server: {
 //   //   proxy: {
 //   //     "/": {
@@ -17,5 +17,5 @@ import react from "@vitejs/plugin-react";
 // });
 export default defineConfig({
   plugins: [react()],
-  base: "/booking/", // Change this from "/booking/" to "./"
+  base: "/booking/",
 });
