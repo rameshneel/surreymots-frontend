@@ -518,9 +518,9 @@ const ServiceBookingForm = () => {
               </p>
             )} */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#F7FAFC] p-4 rounded-xl border border-[#E6F0FA] shadow-md">
-              {/* Total Price on Left (Desktop), Centered (Mobile) */}
+              {/* Total Price on Left (Desktop), Centered and Full-Width (Mobile) */}
               <div className="flex justify-center sm:justify-start items-center mb-4 sm:mb-0 w-full sm:w-auto">
-                <div className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-gray-600 bg-gray-800">
+                <div className="flex items-center justify-center space-x-2 px-3 py-2 w-full sm:w-auto rounded-lg border border-gray-600 bg-gray-800">
                   <PoundSterlingIcon className="text-[#01669A] h-5 w-5" />
                   <span className="text-lg font-semibold text-teal-400">
                     {watch("totalPrice")
