@@ -483,8 +483,8 @@ const ServiceBookingForm = () => {
             </div>
 
             {/* Cancellation Policy and Price */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#F7FAFC] p-4 rounded-xl border border-[#E6F0FA] shadow-md">
-              {/* <div className="flex items-center mb-4 sm:mb-0">
+            {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#F7FAFC] p-4 rounded-xl border border-[#E6F0FA] shadow-md">
+              <div className="flex items-center mb-4 sm:mb-0">
                 <input
                   type="checkbox"
                   {...register("awareOfCancellationPolicy", {
@@ -498,8 +498,44 @@ const ServiceBookingForm = () => {
                     24-hour cancellation policy
                   </span>
                 </span>
-              </div> */}
-              <div className="flex flex-col sm:flex-row justify-end gap-4">
+              </div>
+              <div className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-gray-600 bg-gray-800">
+                <PoundSterlingIcon className="text-[#01669A] h-5 w-5" />
+                <span className="text-lg font-semibold text-teal-400">
+                  {watch("totalPrice")
+                    ? Number(watch("totalPrice")).toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "GBP",
+                      })
+                    : "£0.00"}
+                </span>
+              </div>
+            </div>
+            {errors.awareOfCancellationPolicy && (
+              <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />{" "}
+                {errors.awareOfCancellationPolicy.message}
+              </p>
+            )} */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#F7FAFC] p-4 rounded-xl border border-[#E6F0FA] shadow-md">
+              {/* Total Price on Left (Desktop), Centered (Mobile) */}
+              <div className="flex justify-center sm:justify-start items-center mb-4 sm:mb-0 w-full sm:w-auto">
+                <div className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-gray-600 bg-gray-800">
+                  <PoundSterlingIcon className="text-[#01669A] h-5 w-5" />
+                  <span className="text-lg font-semibold text-teal-400">
+                    {watch("totalPrice")
+                      ? Number(watch("totalPrice")).toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "GBP",
+                        })
+                      : "£0.00"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Form Actions */}
+              <div className="flex flex-col sm:flex-row justify-end items-center gap-4 w-full sm:w-auto">
+                {/* Reset Button */}
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1.05 }}
@@ -510,6 +546,8 @@ const ServiceBookingForm = () => {
                 >
                   Reset
                 </motion.button>
+
+                {/* Submit Button */}
                 <motion.button
                   type="submit"
                   whileHover={{ scale: 1.05 }}
@@ -527,15 +565,9 @@ const ServiceBookingForm = () => {
                 </motion.button>
               </div>
             </div>
-            {/* {errors.awareOfCancellationPolicy && (
-              <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
-                <AlertCircle className="h-3 w-3" />{" "}
-                {errors.awareOfCancellationPolicy.message}
-              </p>
-            )} */}
 
             {/* Form Actions */}
-            <div className="flex flex-col sm:flex-row justify-end gap-4">
+            {/* <div className="flex flex-col sm:flex-row justify-end gap-4">
               <motion.button
                 type="button"
                 whileHover={{ scale: 1.05 }}
@@ -561,7 +593,7 @@ const ServiceBookingForm = () => {
                   "Book MOT Test"
                 )}
               </motion.button>
-            </div>
+            </div> */}
           </form>
         </div>
 
