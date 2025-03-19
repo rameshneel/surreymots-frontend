@@ -499,18 +499,6 @@ const ServiceBookingForm = () => {
                   </span>
                 </span>
               </div> */}
-
-              <div className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-gray-600 bg-gray-800">
-                <PoundSterlingIcon className="text-[#01669A] h-5 w-5" />
-                <span className="text-lg font-semibold text-teal-400">
-                  {watch("totalPrice")
-                    ? Number(watch("totalPrice")).toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "GBP",
-                      })
-                    : "£0.00"}
-                </span>
-              </div>
               <div className="flex flex-col sm:flex-row justify-end gap-4">
                 <motion.button
                   type="button"
@@ -547,7 +535,7 @@ const ServiceBookingForm = () => {
             )} */}
 
             {/* Form Actions */}
-            {/* <div className="flex flex-col sm:flex-row justify-end gap-4">
+            <div className="flex flex-col sm:flex-row justify-end gap-4">
               <motion.button
                 type="button"
                 whileHover={{ scale: 1.05 }}
@@ -573,7 +561,7 @@ const ServiceBookingForm = () => {
                   "Book MOT Test"
                 )}
               </motion.button>
-            </div> */}
+            </div>
           </form>
         </div>
 
