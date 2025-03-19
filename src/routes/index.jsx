@@ -28,7 +28,7 @@ const SlotManager = lazy(() => import("../components/Admin/SlotManager"));
 const AppRoutes = () => {
   return (
     // <BrowserRouter basename="/booking/">
-    <BrowserRouter basename="/">
+    <BrowserRouter basename="/booking/">
       <AuthProvider>
         <Suspense
           fallback={
