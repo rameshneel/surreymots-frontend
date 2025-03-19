@@ -74,7 +74,7 @@ const CustomerInfoModal = ({ isOpen, onClose, customerId }) => {
                 <p>{customer.contactNumber}</p>
               </div>
               <div>
-                <h3 className="font-semibold text-teal-400">Date</h3>
+                <h3 className="font-semibold text-teal-400">Booked Date</h3>
                 <p>{new Date(customer.selectedDate).toLocaleDateString()}</p>
               </div>
               <div>
