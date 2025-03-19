@@ -224,13 +224,213 @@ const Booking = () => {
   };
 
   return (
-    <div className="flex flex-col p-6 bg-gray-900 min-h-screen font-sans text-gray-200">
-      {/* Compact Search Bar */}
+    // <div className="flex flex-col p-6 bg-gray-900 min-h-screen font-sans text-gray-200">
+    //   {/* Compact Search Bar */}
+    //   <motion.div
+    //     initial={{ opacity: 0, y: -20 }}
+    //     animate={{ opacity: 1, y: 0 }}
+    //     transition={{ duration: 0.5 }}
+    //     className="flex items-center mb-6 w-full max-w-md bg-gray-800 rounded-full shadow-md py-2 px-4"
+    //   >
+    //     <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-2" />
+    //     <input
+    //       value={searchInput}
+    //       onChange={(e) => setSearchInput(e.target.value)}
+    //       placeholder="Search bookings..."
+    //       className="w-full text-sm bg-transparent border-none focus:outline-none focus:ring-0 text-gray-200 placeholder-gray-500"
+    //     />
+    //   </motion.div>
+
+    //   {/* Loading & Error States */}
+    //   {loading && (
+    //     <motion.div
+    //       initial={{ opacity: 0 }}
+    //       animate={{ opacity: 1 }}
+    //       className="flex justify-center py-8"
+    //     >
+    //       <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-teal-400"></div>
+    //     </motion.div>
+    //   )}
+    //   {error && (
+    //     <motion.p
+    //       initial={{ opacity: 0 }}
+    //       animate={{ opacity: 1 }}
+    //       className="text-red-400 text-center mb-4 text-sm"
+    //     >
+    //       {error}
+    //     </motion.p>
+    //   )}
+
+    //   {/* Table */}
+    //   <div className="shadow-xl rounded-lg overflow-hidden bg-gray-800">
+    //     <table
+    //       {...getTableProps()}
+    //       className="min-w-full divide-y divide-gray-700"
+    //     >
+    //       <thead className="bg-gray-700">
+    //         {headerGroups.map((headerGroup, index) => (
+    //           <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+    //             {headerGroup.headers.map((column) => (
+    //               <th
+    //                 {...column.getHeaderProps(column.getSortByToggleProps())}
+    //                 className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
+    //                 key={column.id}
+    //               >
+    //                 <div className="flex items-center">
+    //                   {column.render("Header")}
+    //                   {column.canSort && (
+    //                     <ChevronUpDownIcon className="ml-2 h-4 w-4 text-gray-400" />
+    //                   )}
+    //                 </div>
+    //               </th>
+    //             ))}
+    //           </tr>
+    //         ))}
+    //       </thead>
+    //       <tbody
+    //         {...getTableBodyProps()}
+    //         className="bg-gray-800 divide-y divide-gray-700"
+    //       >
+    //         <AnimatePresence>
+    //           {page.map((row, index) => {
+    //             prepareRow(row);
+    //             return (
+    //               <motion.tr
+    //                 {...row.getRowProps()}
+    //                 key={index}
+    //                 initial={{ opacity: 0, y: 20 }}
+    //                 animate={{ opacity: 1, y: 0 }}
+    //                 exit={{ opacity: 0, y: -20 }}
+    //                 transition={{ duration: 0.3 }}
+    //                 className="hover:bg-gray-700"
+    //               >
+    //                 {row.cells.map((cell, idx) => (
+    //                   <td
+    //                     {...cell.getCellProps()}
+    //                     key={idx}
+    //                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-200"
+    //                   >
+    //                     {cell.render("Cell")}
+    //                   </td>
+    //                 ))}
+    //               </motion.tr>
+    //             );
+    //           })}
+    //         </AnimatePresence>
+    //       </tbody>
+    //     </table>
+    //   </div>
+
+    //   {/* Pagination */}
+    //   <motion.div
+    //     initial={{ opacity: 0 }}
+    //     animate={{ opacity: 1 }}
+    //     transition={{ delay: 0.3, duration: 0.5 }}
+    //     className="mt-6 flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md"
+    //   >
+    //     <div className="flex items-center space-x-2">
+    //       <span className="text-sm text-gray-400">
+    //         Page{" "}
+    //         <strong>
+    //           {pageIndex + 1} of {pageOptions.length}
+    //         </strong>
+    //       </span>
+    //       <select
+    //         value={pageSize}
+    //         onChange={(e) => setTablePageSize(Number(e.target.value))}
+    //         className="p-1 bg-gray-700 border border-gray-600 rounded-lg text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-400"
+    //       >
+    //         {[10, 20, 30, 40, 50].map((size) => (
+    //           <option key={size} value={size}>
+    //             Show {size}
+    //           </option>
+    //         ))}
+    //       </select>
+    //     </div>
+    //     <div className="flex space-x-2">
+    //       <motion.button
+    //         whileHover={{ scale: 1.05 }}
+    //         whileTap={{ scale: 0.95 }}
+    //         onClick={() => gotoPage(0)}
+    //         disabled={!canPreviousPage}
+    //         className="p-2 rounded-lg bg-teal-500 text-white disabled:bg-gray-600 disabled:cursor-not-allowed"
+    //       >
+    //         <ChevronDoubleLeftIcon className="h-5 w-5" />
+    //       </motion.button>
+    //       <motion.button
+    //         whileHover={{ scale: 1.05 }}
+    //         whileTap={{ scale: 0.95 }}
+    //         onClick={() => previousPage()}
+    //         disabled={!canPreviousPage}
+    //         className="p-2 rounded-lg bg-teal-500 text-white disabled:bg-gray-600 disabled:cursor-not-allowed"
+    //       >
+    //         <ChevronLeftIcon className="h-5 w-5" />
+    //       </motion.button>
+    //       <motion.button
+    //         whileHover={{ scale: 1.05 }}
+    //         whileTap={{ scale: 0.95 }}
+    //         onClick={() => nextPage()}
+    //         disabled={!canNextPage}
+    //         className="p-2 rounded-lg bg-teal-500 text-white disabled:bg-gray-600 disabled:cursor-not-allowed"
+    //       >
+    //         <ChevronRightIcon className="h-5 w-5" />
+    //       </motion.button>
+    //       <motion.button
+    //         whileHover={{ scale: 1.05 }}
+    //         whileTap={{ scale: 0.95 }}
+    //         onClick={() => gotoPage(pageCount - 1)}
+    //         disabled={!canNextPage}
+    //         className="p-2 rounded-lg bg-teal-500 text-white disabled:bg-gray-600 disabled:cursor-not-allowed"
+    //       >
+    //         <ChevronDoubleRightIcon className="h-5 w-5" />
+    //       </motion.button>
+    //     </div>
+    //   </motion.div>
+
+    //   {/* Modals */}
+    //   <AnimatePresence>
+    //     {modalOpen && (
+    //       <CustomerInfoModal
+    //         isOpen={modalOpen}
+    //         onClose={closeModal}
+    //         customerId={selectedCustomerId}
+    //       />
+    //     )}
+    //   </AnimatePresence>
+    //   <AnimatePresence>
+    //     {deleteModalOpen && (
+    //       <DeleteConfirmationModal
+    //         isOpen={deleteModalOpen}
+    //         onClose={closeDeleteModal}
+    //         onConfirm={() => {
+    //           deleteCustomer(selectedCustomerId);
+    //           closeDeleteModal();
+    //         }}
+    //       />
+    //     )}
+    //   </AnimatePresence>
+
+    //   {/* Toast Notifications */}
+    //   <ToastContainer
+    //     position="top-center"
+    //     autoClose={3000}
+    //     hideProgressBar={true}
+    //     newestOnTop={false}
+    //     closeOnClick
+    //     rtl={false}
+    //     pauseOnFocusLoss
+    //     draggable
+    //     pauseOnHover
+    //     theme="dark"
+    //   />
+    // </div>
+    <div className="flex flex-col p-4 sm:p-6 bg-gray-900 min-h-screen font-sans text-gray-200">
+      {/* Search Bar */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex items-center mb-6 w-full max-w-md bg-gray-800 rounded-full shadow-md py-2 px-4"
+        className="flex items-center mb-6 w-full max-w-md mx-auto bg-gray-800 rounded-full shadow-md py-2 px-4"
       >
         <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mr-2" />
         <input
@@ -261,8 +461,8 @@ const Booking = () => {
         </motion.p>
       )}
 
-      {/* Table */}
-      <div className="shadow-xl rounded-lg overflow-hidden bg-gray-800">
+      {/* Table for Desktop/Tablet */}
+      <div className="hidden sm:block shadow-xl rounded-lg overflow-x-auto bg-gray-800">
         <table
           {...getTableProps()}
           className="min-w-full divide-y divide-gray-700"
@@ -273,7 +473,11 @@ const Booking = () => {
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
+                    className={`px-4 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider ${
+                      column.Header === "Created At"
+                        ? "hidden lg:table-cell"
+                        : ""
+                    }`}
                     key={column.id}
                   >
                     <div className="flex items-center">
@@ -308,7 +512,11 @@ const Booking = () => {
                       <td
                         {...cell.getCellProps()}
                         key={idx}
-                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-200"
+                        className={`px-4 py-3 whitespace-nowrap text-sm text-gray-200 ${
+                          cell.column.Header === "Created At"
+                            ? "hidden lg:table-cell"
+                            : ""
+                        }`}
                       >
                         {cell.render("Cell")}
                       </td>
@@ -321,12 +529,46 @@ const Booking = () => {
         </table>
       </div>
 
+      {/* Card Layout for Mobile */}
+      <div className="sm:hidden space-y-4">
+        <AnimatePresence>
+          {page.map((row, index) => {
+            prepareRow(row);
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="bg-gray-800 p-4 rounded-lg shadow-md"
+              >
+                {row.cells.map((cell, idx) => {
+                  if (cell.column.Header === "Created At") return null; // Hide Created At on mobile
+                  return (
+                    <div
+                      key={idx}
+                      className="flex justify-between py-1 text-sm text-gray-200"
+                    >
+                      <span className="font-medium text-gray-400">
+                        {cell.column.Header}:
+                      </span>
+                      <span>{cell.render("Cell")}</span>
+                    </div>
+                  );
+                })}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
+
       {/* Pagination */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}
-        className="mt-6 flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md"
+        className="mt-6 flex flex-col sm:flex-row justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md gap-4"
       >
         <div className="flex items-center space-x-2">
           <span className="text-sm text-gray-400">
@@ -340,7 +582,7 @@ const Booking = () => {
             onChange={(e) => setTablePageSize(Number(e.target.value))}
             className="p-1 bg-gray-700 border border-gray-600 rounded-lg text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-400"
           >
-            {[10, 20, 30, 40, 50].map((size) => (
+            {[5, 10, 20].map((size) => (
               <option key={size} value={size}>
                 Show {size}
               </option>
