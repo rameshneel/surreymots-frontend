@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/booking/(.*)", "destination": "/$1" }
+    { "source": "/booking/(.*)", "destination": "/booking/$1" } 
   ]
 }
