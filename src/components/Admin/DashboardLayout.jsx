@@ -85,7 +85,7 @@ const DashboardLayout = () => {
   // Sidebar content extracted for reuse
   const SidebarContent = () => (
     <>
-      <div className="p-6 flex justify-between items-center">
+      <div className="p-6  z-30 flex justify-between items-center">
         <h1 className="text-2xl font-semibold tracking-wide text-teal-400">
           <img src={logo} alt="logo" className="w-48 pt-4" />
         </h1>

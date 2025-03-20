@@ -38,6 +38,7 @@ const AppRoutes = () => {
           }
         >
           <Routes>
+            {/* <Route path="/" element={<Navigate to="/login" />} /> */}
             {/* Public Routes */}
             <Route path="/" element={<ServiceBookingForm />} />
             <Route
@@ -80,7 +81,8 @@ const AppRoutes = () => {
             </Route>
 
             {/* Catch-all route */}
-            <Route path="*" element={<Navigate to="/login" />} />
+
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Suspense>
       </AuthProvider>

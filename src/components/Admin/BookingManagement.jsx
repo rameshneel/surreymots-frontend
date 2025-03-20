@@ -43,10 +43,10 @@ const BookingManagement = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
   return (
-    <div className="container mx-auto p-4 sm:p-6">
+    <div className="container mx-auto  sm:p-6">
       <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 p-4 sm:p-6">
-          <div className="border border-gray-700 p-4 rounded-lg shadow-sm bg-gray-900">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6  sm:p-6">
+          <div className="border border-gray-700 p-1 rounded-lg shadow-sm bg-gray-900">
             <h2 className="text-lg sm:text-xl font-semibold mb-4 text-teal-400">
               Select a Date
             </h2>

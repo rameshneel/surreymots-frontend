@@ -76,7 +76,9 @@ const ServiceBookingForm = () => {
     { value: "class4", label: "Class 4" },
     { value: "class7", label: "Class 7" },
   ];
-
+  const paymentOptions = [
+    { value: "Payment on the day", label: "Payment on the day" },
+  ];
   const customSelectStyles = {
     control: (base, state) => ({
       ...base,
@@ -199,7 +201,7 @@ const ServiceBookingForm = () => {
   }, [classSelection, setValue]);
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-100 min-h-screen flex items-center justify-center">
+    <div className=" bg-gray-100 min-h-screen flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -310,7 +312,7 @@ const ServiceBookingForm = () => {
                         ? "border-red-500"
                         : "border-gray-300"
                     } focus:ring-2 focus:ring-[#01669A] focus:border-[#01669A] transition-all`}
-                    placeholder="07123 456789"
+                    placeholder="07123 XXXXXX"
                   />
                   {errors.contactNumber && (
                     <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
@@ -458,6 +460,41 @@ const ServiceBookingForm = () => {
                     <CreditCard className="w-4 h-4 text-[#01669A]" /> Payment
                     Method
                   </label>
+                  <Controller
+                    name="paymentMethod"
+                    control={control}
+                    defaultValue="Payment on the day"
+                    rules={{ required: "Payment method is required" }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={
+                          paymentOptions.find(
+                            (option) => option.value === field.value
+                          ) || null
+                        }
+                        onChange={(option) =>
+                          field.onChange(option?.value || null)
+                        }
+                        options={paymentOptions}
+                        styles={customSelectStyles}
+                        placeholder="Select a payment method"
+                        className="text-sm"
+                      />
+                    )}
+                  />
+                  {errors.paymentMethod && (
+                    <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                    </p>
+                  )}
+                </div>
+
+                {/* <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+                    <CreditCard className="w-4 h-4 text-[#01669A]" /> Payment
+                    Method
+                  </label>
                   <select
                     {...register("paymentMethod", {
                       required: "Payment method is required",
@@ -478,7 +515,7 @@ const ServiceBookingForm = () => {
                       {errors.paymentMethod.message}
                     </p>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -518,10 +555,8 @@ const ServiceBookingForm = () => {
               </p>
             )} */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#F7FAFC] p-4 rounded-xl border border-[#E6F0FA] shadow-md">
-              {/* Total Price on Left (Desktop), Centered and Full-Width (Mobile) */}
               <div className="flex justify-center sm:justify-start items-center mb-4 sm:mb-0 w-full sm:w-auto">
                 <div className="flex items-center justify-center space-x-2 px-3 py-2 w-full sm:w-auto rounded-lg border border-gray-600 bg-gray-800">
-                  <PoundSterlingIcon className="text-[#01669A] h-5 w-5" />
                   <span className="text-lg font-semibold text-teal-400">
                     {watch("totalPrice")
                       ? Number(watch("totalPrice")).toLocaleString("en-US", {

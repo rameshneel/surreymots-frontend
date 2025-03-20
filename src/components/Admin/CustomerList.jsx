@@ -424,7 +424,7 @@ const Booking = () => {
     //     theme="dark"
     //   />
     // </div>
-    <div className="flex flex-col p-4 sm:p-6 bg-gray-900 min-h-screen font-sans text-gray-200">
+    <div className="flex flex-col sm:p-6 bg-gray-900 min-h-screen font-sans text-gray-200">
       {/* Search Bar */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

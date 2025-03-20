@@ -216,7 +216,7 @@ const BookingbyAdminForm = () => {
   }));
 
   return (
-    <div className="py-6 px-4 sm:px-6 lg:px-8 bg-gray-900 min-h-screen">
+    <div className=" sm:px-6 lg:px-8 bg-gray-900 min-h-screen">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
