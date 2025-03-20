@@ -1,14 +1,14 @@
 import axios from "axios";
 
 export const publicApi = axios.create({
-  // baseURL: "http://localhost:3000/api",
-  baseURL: "https://in.prelaunchserver.com/surreymots-api/api",
+  baseURL: "http://localhost:3000/api",
+  // baseURL: "https://in.prelaunchserver.com/surreymots-api/api",
   withCredentials: true,
   timeout: 120000,
 });
 export const privateApi = axios.create({
-  // baseURL: "http://localhost:3000/api",
-  baseURL: "https://in.prelaunchserver.com/surreymots-api/api",
+  baseURL: "http://localhost:3000/api",
+  // baseURL: "https://in.prelaunchserver.com/surreymots-api/api",
   withCredentials: true,
   timeout: 120000,
 });
